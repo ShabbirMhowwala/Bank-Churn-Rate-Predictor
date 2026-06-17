@@ -1,4 +1,4 @@
-# FinGuard AI: Deep Learning Customer Exit Risk Predictor
+# : CHAT W Deep Learning Customer Exit Risk Predictor
 
 FinGuard AI is a beginner-friendly but portfolio-ready FinTech project that predicts whether a bank customer is likely to leave using a TensorFlow/Keras neural network.
 
