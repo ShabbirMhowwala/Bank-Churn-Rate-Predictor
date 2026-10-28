@@ -1,8 +1,8 @@
               precision    recall  f1-score   support
 
-      Stayed       0.90      0.68      0.78      1593
-      Exited       0.37      0.71      0.48       407
+      Stayed       0.93      0.78      0.85      1593
+      Exited       0.47      0.76      0.58       407
 
-    accuracy                           0.69      2000
-   macro avg       0.64      0.70      0.63      2000
-weighted avg       0.79      0.69      0.72      2000
+    accuracy                           0.77      2000
+   macro avg       0.70      0.77      0.71      2000
+weighted avg       0.83      0.77      0.79      2000

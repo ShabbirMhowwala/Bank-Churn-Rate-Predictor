@@ -204,7 +204,7 @@ def render_predictor() -> None:
         }
 
         raw_frame = make_prediction_frame(values, feature_columns[:10])
-        prediction_frame = add_fintech_features(raw_frame)
+        prediction_frame = add_fintech_features(raw_frame, balance_median=float(load_dataset()["Balance"].median()))
         prepared = preprocessor.transform(prediction_frame)
         probability = float(model.predict(prepared, verbose=0).ravel()[0])
         label, css_class = probability_label(probability)

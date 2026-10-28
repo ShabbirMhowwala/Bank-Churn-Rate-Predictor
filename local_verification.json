@@ -1,0 +1,160 @@
+{
+  "rows": 10000,
+  "columns": [
+    "RowNumber",
+    "CustomerId",
+    "Surname",
+    "CreditScore",
+    "Geography",
+    "Gender",
+    "Age",
+    "Tenure",
+    "Balance",
+    "NumOfProducts",
+    "HasCrCard",
+    "IsActiveMember",
+    "EstimatedSalary",
+    "Exited"
+  ],
+  "missing_values": 0,
+  "exited": 2037,
+  "churn_rate": 0.2037,
+  "countries": [
+    "France",
+    "Germany",
+    "Spain"
+  ],
+  "balance_median": 97198.54000000001,
+  "input_shape": [
+    null,
+    18
+  ],
+  "parameters": 4097,
+  "preprocessed_features": [
+    "numeric__CreditScore",
+    "numeric__Age",
+    "numeric__Tenure",
+    "numeric__Balance",
+    "numeric__NumOfProducts",
+    "numeric__HasCrCard",
+    "numeric__IsActiveMember",
+    "numeric__EstimatedSalary",
+    "numeric__BalanceSalaryRatio",
+    "numeric__CreditScoreAgeRatio",
+    "numeric__BalancePerProduct",
+    "numeric__TenureByAge",
+    "numeric__IsHighValueInactive",
+    "categorical__Geography_France",
+    "categorical__Geography_Germany",
+    "categorical__Geography_Spain",
+    "categorical__Gender_Female",
+    "categorical__Gender_Male"
+  ],
+  "metrics_saved": {
+    "accuracy": 0.774,
+    "precision": 0.4660633484162896,
+    "recall": 0.7592137592137592,
+    "roc_auc": 0.8589822488127573
+  },
+  "metrics_recomputed": {
+    "accuracy": 0.774,
+    "precision": 0.4660633484162896,
+    "recall": 0.7592137592137592,
+    "roc_auc": 0.8589822488127573
+  },
+  "confusion_matrix": [
+    [
+      1239,
+      354
+    ],
+    [
+      98,
+      309
+    ]
+  ],
+  "majority_baseline_accuracy": 0.7965,
+  "saved_probability_max_difference": 1.3874206539199463e-07,
+  "sample_predictions": [
+    {
+      "input": {
+        "CreditScore": 619,
+        "Geography": "France",
+        "Gender": "Female",
+        "Age": 42,
+        "Tenure": 2,
+        "Balance": 0.0,
+        "NumOfProducts": 1,
+        "HasCrCard": 1,
+        "IsActiveMember": 1,
+        "EstimatedSalary": 101348.88
+      },
+      "probability": 0.6587229371070862,
+      "band": "High Risk"
+    },
+    {
+      "input": {
+        "CreditScore": 502,
+        "Geography": "France",
+        "Gender": "Female",
+        "Age": 42,
+        "Tenure": 8,
+        "Balance": 159660.8,
+        "NumOfProducts": 3,
+        "HasCrCard": 1,
+        "IsActiveMember": 0,
+        "EstimatedSalary": 113931.57
+      },
+      "probability": 0.9871962666511536,
+      "band": "High Risk"
+    },
+    {
+      "input": {
+        "CreditScore": 850,
+        "Geography": "Germany",
+        "Gender": "Male",
+        "Age": 36,
+        "Tenure": 5,
+        "Balance": 128000.0,
+        "NumOfProducts": 2,
+        "HasCrCard": 1,
+        "IsActiveMember": 1,
+        "EstimatedSalary": 145000.0
+      },
+      "probability": 0.07567023485898972,
+      "band": "Stable"
+    },
+    {
+      "input": {
+        "CreditScore": 580,
+        "Geography": "Spain",
+        "Gender": "Female",
+        "Age": 51,
+        "Tenure": 1,
+        "Balance": 99000.0,
+        "NumOfProducts": 1,
+        "HasCrCard": 0,
+        "IsActiveMember": 0,
+        "EstimatedSalary": 72000.0
+      },
+      "probability": 0.845757782459259,
+      "band": "High Risk"
+    }
+  ],
+  "single_row_feature_check": {
+    "training_high_value_inactive": 1,
+    "default_single_row_high_value_inactive": 0,
+    "corrected_single_row_high_value_inactive": 1
+  },
+  "pages": {
+    "app.py": "PASS",
+    "pages\\1_Dashboard.py": "PASS",
+    "pages\\2_Predict.py": "PASS",
+    "pages\\3_Analytics.py": "PASS",
+    "pages\\4_Model_Performance.py": "PASS",
+    "pages\\5_About.py": "PASS",
+    "pages\\6_Contact.py": "PASS"
+  },
+  "prediction_form": "PASS",
+  "empty_analytics_filter": "PASS",
+  "training_step": "PASS (temporary in-memory model; saved artifacts unchanged)"
+}

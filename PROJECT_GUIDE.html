@@ -1,0 +1,652 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FinGuard AI - College Project Guide</title><style>
+:root {color-scheme:light;--ink:#132238;--muted:#51617a;--blue:#0b54a4;--line:#dce5ef}
+*{box-sizing:border-box}body{margin:0;background:#eef3f8;color:var(--ink);font:17px/1.7 'Segoe UI',Arial,sans-serif}
+header{background:linear-gradient(110deg,#0b1930,#163e63);color:white;padding:38px max(24px,calc((100vw - 1080px)/2));}
+header strong{display:block;font-size:32px;letter-spacing:-1px}header p{margin:4px 0 18px;color:#c9def0}
+header a{display:inline-block;border:1px solid #7bb8e6;padding:7px 16px;border-radius:8px;color:#fff;text-decoration:none}
+main{max-width:1130px;margin:28px auto 64px;background:white;border:1px solid var(--line);border-radius:16px;padding:36px 48px;box-shadow:0 10px 40px #1739570a}
+h1{font-size:34px;line-height:1.25;letter-spacing:-1px}h2{font-size:25px;line-height:1.35;margin-top:48px;border-top:1px solid var(--line);padding-top:28px;scroll-margin-top:20px}h3{font-size:20px;margin-top:30px}
+a{color:var(--blue)}p,li{max-width:90ch}table{border-collapse:collapse;width:100%;margin:22px 0;font-size:15px}th,td{text-align:left;padding:12px 14px;border:1px solid var(--line);vertical-align:top}th{background:#eaf3fb}tr:nth-child(even){background:#f8fafc}
+pre{white-space:pre-wrap;background:#10243a;color:#e6f2fc;padding:22px;border-radius:10px;font-size:14px;line-height:1.65;overflow-wrap:anywhere}code{font-family:Consolas,monospace;font-size:.91em}p code,li code,td code{background:#eff4f8;border-radius:4px;padding:2px 4px;overflow-wrap:anywhere}
+details{background:#f2f7fb;border:1px solid var(--line);padding:18px 24px;border-radius:10px;margin-bottom:28px}summary{font-weight:700;cursor:pointer}.toc ul{padding-left:22px}.toc a{text-decoration:none}.toc ul ul{display:block}.toc ul ul ul{display:none}footer{padding-top:28px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+@media(max-width:700px){main{margin:12px;border-radius:8px;padding:20px}header{padding:25px}h1{font-size:28px}h2{font-size:22px}table{font-size:13px}th,td{padding:8px}pre{padding:12px;font-size:12px}}
+@media print{body{background:white;font-size:11pt}header,details{display:none}main{border:0;box-shadow:none;max-width:none;margin:0;padding:0}h2{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}pre{background:#f1f4f7;color:#15283b}}
+</style></head><body><header><strong>FinGuard AI / Your project, explained</strong><p>Local setup, model workflow, measured results, and viva preparation</p><a href="http://127.0.0.1:8501">Open the running app</a></header><main><details><summary>Jump to a chapter</summary><div class="toc">
+<ul>
+<li><a href="#finguard-ai-understand-your-bank-churn-project">FinGuard AI: understand your bank churn project</a><ul>
+<li><a href="#1-what-problem-does-it-solve">1. What problem does it solve?</a></li>
+<li><a href="#2-the-whole-system-at-a-glance">2. The whole system at a glance</a></li>
+<li><a href="#3-technologies-and-exactly-where-each-is-used">3. Technologies and exactly where each is used</a></li>
+<li><a href="#4-understand-the-data">4. Understand the data</a></li>
+<li><a href="#5-feature-engineering-turn-raw-inputs-into-useful-ratios">5. Feature engineering: turn raw inputs into useful ratios</a></li>
+<li><a href="#6-what-the-neural-network-does">6. What the neural network does</a></li>
+<li><a href="#7-training-validation-and-test-data">7. Training, validation, and test data</a></li>
+<li><a href="#8-how-to-read-the-actual-model-results">8. How to read the actual model results</a></li>
+<li><a href="#9-trace-one-prediction-through-the-code">9. Trace one prediction through the code</a></li>
+<li><a href="#10-understand-each-page">10. Understand each page</a></li>
+<li><a href="#11-file-map-what-to-read-and-in-what-order">11. File map: what to read and in what order</a></li>
+<li><a href="#12-what-was-corrected-locally-and-why">12. What was corrected locally and why?</a></li>
+<li><a href="#13-a-five-minute-college-demonstration">13. A five-minute college demonstration</a></li>
+<li><a href="#14-viva-questions-with-answers-you-can-defend">14. Viva questions with answers you can defend</a></li>
+<li><a href="#15-a-practical-study-sequence">15. A practical study sequence</a></li>
+<li><a href="#16-verified-local-results-23-october-2026">16. Verified local results — 23 October 2026</a><ul>
+<li><a href="#try-the-supplied-sample-profiles">Try the supplied sample profiles</a></li>
+<li><a href="#verification-completed">Verification completed</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</details><h1 id="finguard-ai-understand-your-bank-churn-project">FinGuard AI: understand your bank churn project</h1>
+<p>This guide explains the actual code in <code>D:\Bank-Churn-Rate-Predictor</code>, cloned from <a href="https://github.com/ShabbirMhowwala/Bank-Churn-Rate-Predictor">your GitHub repository</a>. Read LOCAL_SETUP.md first if you only want to launch it. The repository snapshot is commit <code>897172692a4f320ba6e108e7ee5399e82e6f4584</code>; local setup additions and the inference correction are described below.</p>
+<h2 id="1-what-problem-does-it-solve">1. What problem does it solve?</h2>
+<p><strong>Customer churn</strong> means a customer leaves a service. Here, the recorded target is <code>Exited</code>: <strong>1 means exited; 0 means stayed</strong>. The application estimates a new customer's exit risk using their profile and banking attributes. A bank could use such a score to prioritize a human review or retention conversation.</p>
+<p>This is <strong>supervised learning</strong> because training examples include the known answer. It is <strong>binary classification</strong> because there are two target classes. It uses a <strong>feed-forward artificial neural network (ANN)</strong>, a type of deep learning model.</p>
+<p>The dashboard's historical churn rate and an individual prediction are different quantities. Historical churn rate is the fraction of dataset customers who actually exited. The prediction is the neural network's estimated score for one profile. There is no time horizon such as “will leave within 30 days” in the code or dataset schema, so do not claim one.</p>
+<p>The project is a local educational prototype. It does not connect to a bank, stream live transactions, execute retention actions, or send customer messages. “Live inference” means a prediction is calculated when you submit the form.</p>
+<h2 id="2-the-whole-system-at-a-glance">2. The whole system at a glance</h2>
+<pre><code class="language-text">TRAINING (only when creating or replacing the model)
+
+Historical CSV with Exited labels
+    -&gt; remove identifiers and engineer five features
+    -&gt; split 80% development / 20% test
+    -&gt; fit scaler and category encoder on the development portion
+    -&gt; reserve 15% of that portion for validation during model.fit
+    -&gt; train ANN using class weights and early stopping
+    -&gt; evaluate on the untouched test labels
+    -&gt; save network + preprocessor + metrics + plots
+
+PREDICTION (each form submission)
+
+10 customer inputs in browser
+    -&gt; Streamlit Python code
+    -&gt; same five engineered features, using the reference median
+    -&gt; saved scaler and category encoder transform the inputs
+    -&gt; saved ANN computes a score from 0 to 1
+    -&gt; risk band + rule-based suggestions shown in the browser
+</code></pre>
+<p>Training learns the weights. Prediction reuses them; submitting the form does not retrain the network or add the customer to the CSV.</p>
+<h2 id="3-technologies-and-exactly-where-each-is-used">3. Technologies and exactly where each is used</h2>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Job in this project</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python 3.12</td>
+<td>Main programming language; runs training, preprocessing, and the web application.</td>
+</tr>
+<tr>
+<td>TensorFlow 2.18 / Keras</td>
+<td>Define, optimize, save, load, and execute the neural network. Keras is the higher-level modeling interface used through TensorFlow.</td>
+</tr>
+<tr>
+<td>scikit-learn 1.9.0</td>
+<td>Train/test splitting, numeric standardization, one-hot encoding, class weights, and evaluation metrics. The original requirements requested 1.6.1, but the bundled preprocessor was saved with 1.9.0.</td>
+</tr>
+<tr>
+<td>Pandas 2.2.3</td>
+<td>Reads CSVs into DataFrames, adds features, filters records, groups customers, and computes chart summaries.</td>
+</tr>
+<tr>
+<td>NumPy 2.0.2</td>
+<td>Numeric arrays, class calculations, probability arrays, and thresholding predictions.</td>
+</tr>
+<tr>
+<td>Streamlit</td>
+<td>Turns Python scripts into browser pages, forms, sliders, charts, and tables; also manages caching and reruns. No separate Flask/Django backend is used.</td>
+</tr>
+<tr>
+<td>Plotly 6.7.0</td>
+<td>Interactive bars, scatter plots, histograms, and ROC charts in the current multipage interface.</td>
+</tr>
+<tr>
+<td>Matplotlib 3.10.0</td>
+<td>Saves training curves as PNG images.</td>
+</tr>
+<tr>
+<td>Seaborn 0.13.2</td>
+<td>Draws the confusion-matrix heatmap on a Matplotlib figure.</td>
+</tr>
+<tr>
+<td>Joblib 1.4.2</td>
+<td>Saves and loads the fitted preprocessor, feature-column list, and metric dictionary as <code>.pkl</code> files.</td>
+</tr>
+<tr>
+<td>HDF5 / h5py</td>
+<td>Underlying format/library used by the <code>.h5</code> saved Keras network.</td>
+</tr>
+<tr>
+<td>streamlit-option-menu</td>
+<td>Custom sidebar navigation.</td>
+</tr>
+<tr>
+<td>streamlit-lottie</td>
+<td>Displays the included animation on the About page.</td>
+</tr>
+<tr>
+<td>streamlit-extras</td>
+<td>Metric-card styling helpers used by the theme.</td>
+</tr>
+<tr>
+<td>HTML and CSS</td>
+<td>Custom cards, colors, gradients, layout, and animations embedded into Streamlit. Most styling is in <code>assets/css/theme.css</code>.</td>
+</tr>
+<tr>
+<td>CSV files</td>
+<td>Local data storage. There is no SQL database in this implementation.</td>
+</tr>
+<tr>
+<td>Git / GitHub</td>
+<td>Version control and repository hosting; GitHub is not required for each prediction.</td>
+</tr>
+<tr>
+<td>Python venv and pip</td>
+<td>Keep project packages separate from other Python projects and install their dependencies.</td>
+</tr>
+<tr>
+<td>Windows batch / PowerShell</td>
+<td>Local launch and stop helpers added for this installation.</td>
+</tr>
+</tbody>
+</table>
+<p>Other packages in the local lock file are supporting dependencies, such as SciPy for scientific routines, Pillow for images, and web-server libraries pulled in by Streamlit. <code>requirements-local-lock.txt</code> records the exact installed versions, including Streamlit and Keras. The updated direct requirements now pin these versions too.</p>
+<p>No OpenAI API, chatbot, generative AI, Node.js project, Docker container, or cloud account is needed. The word “AI” here refers to a trained classification network.</p>
+<h2 id="4-understand-the-data">4. Understand the data</h2>
+<p>The CSV is <code>data/bank_customer_churn.csv</code>. Each row represents one historical customer. The reference dataset contains 10,000 rows and 14 columns, with 2,037 exited customers (20.37%). France, Germany, and Spain are the recorded country categories. The local verification report checks these counts and missing values directly.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Meaning and treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RowNumber</td>
+<td>Row identifier; dropped.</td>
+</tr>
+<tr>
+<td>CustomerId</td>
+<td>Customer identifier; dropped.</td>
+</tr>
+<tr>
+<td>Surname</td>
+<td>Customer surname; dropped.</td>
+</tr>
+<tr>
+<td>CreditScore</td>
+<td>Numeric credit score.</td>
+</tr>
+<tr>
+<td>Geography</td>
+<td>Country; encoded categorically.</td>
+</tr>
+<tr>
+<td>Gender</td>
+<td>Recorded gender category; encoded categorically.</td>
+</tr>
+<tr>
+<td>Age</td>
+<td>Age in years.</td>
+</tr>
+<tr>
+<td>Tenure</td>
+<td>Years with the bank.</td>
+</tr>
+<tr>
+<td>Balance</td>
+<td>Account balance.</td>
+</tr>
+<tr>
+<td>NumOfProducts</td>
+<td>Number of banking products used.</td>
+</tr>
+<tr>
+<td>HasCrCard</td>
+<td>Whether the customer has a credit card: 1/0.</td>
+</tr>
+<tr>
+<td>IsActiveMember</td>
+<td>Whether the customer is active: 1/0.</td>
+</tr>
+<tr>
+<td>EstimatedSalary</td>
+<td>Estimated salary.</td>
+</tr>
+<tr>
+<td>Exited</td>
+<td>Target label, excluded from the model inputs.</td>
+</tr>
+</tbody>
+</table>
+<p>Dropping names and identifiers prevents the network from treating arbitrary IDs as meaningful customer behavior. There are <strong>10 original input features</strong> after removing the three identifiers and the target. The repository does not specify the monetary currency or establish the dataset's original collection method; do not label the amounts as rupees or invent a data source. Its README refers to a previous Churn_Modelling.csv project.</p>
+<p>The provided data has no missing values according to local validation. The training code has no general imputation pipeline. A new dataset containing missing values would require additional handling.</p>
+<h2 id="5-feature-engineering-turn-raw-inputs-into-useful-ratios">5. Feature engineering: turn raw inputs into useful ratios</h2>
+<p><code>utils/preprocessing.py</code> adds five columns:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Actual calculation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BalanceSalaryRatio</td>
+<td>Balance / EstimatedSalary; a zero salary is replaced by 1 in this calculation.</td>
+</tr>
+<tr>
+<td>CreditScoreAgeRatio</td>
+<td>CreditScore / Age.</td>
+</tr>
+<tr>
+<td>BalancePerProduct</td>
+<td>Balance / NumOfProducts; a zero product count is replaced by 1.</td>
+</tr>
+<tr>
+<td>TenureByAge</td>
+<td>Tenure / Age, except zero tenure is replaced by 1. This is the script's actual convention.</td>
+</tr>
+<tr>
+<td>IsHighValueInactive</td>
+<td>1 when balance is above the reference median and IsActiveMember is 0; otherwise 0.</td>
+</tr>
+</tbody>
+</table>
+<p>These are engineered hypotheses, not guaranteed causal explanations. They bring information from combinations of columns into explicit inputs the model can learn from.</p>
+<p>After engineering, there are 15 feature columns. Thirteen are numeric; the two categorical columns become five one-hot columns: three countries and two genders. The saved model therefore receives <strong>18 numbers per customer</strong>.</p>
+<p><strong>StandardScaler</strong> changes each numeric value to roughly <code>(value - training_mean) / training_standard_deviation</code>. It does not put everything into the range 0 to 1. Scaling keeps very large salary/balance values from dominating optimization merely because of their units.</p>
+<p><strong>OneHotEncoder</strong> represents categories as indicator columns. For example, France/Germany/Spain becomes a three-position vector. <code>handle_unknown="ignore"</code> lets an unknown category become all zeros instead of causing an encoder error; it does not mean predictions for unseen countries are reliable. The form restricts choices to the recorded countries.</p>
+<p><strong>ColumnTransformer</strong> combines numeric scaling and categorical encoding into one fitted preprocessing object. At prediction time, use <code>transform</code>, never <code>fit_transform</code>, because new customers must use the same learned scaling and category mapping as training.</p>
+<h2 id="6-what-the-neural-network-does">6. What the neural network does</h2>
+<p><code>train_model.py</code> defines this architecture:</p>
+<pre><code class="language-text">18 input values
+    -&gt; Dense(64, ReLU)
+    -&gt; BatchNormalization
+    -&gt; Dropout(25%)
+    -&gt; Dense(32, ReLU)
+    -&gt; Dropout(20%)
+    -&gt; Dense(16, ReLU)
+    -&gt; Dense(1, sigmoid)
+    -&gt; exit-risk score
+</code></pre>
+<p>A dense neuron computes a weighted sum of its inputs plus a bias. The hidden layers learn combinations of customer attributes. <strong>ReLU</strong> returns <code>max(0, value)</code>, introducing nonlinearity. Without nonlinear activations, stacked dense layers would collapse into an equivalent linear transformation.</p>
+<p><strong>Batch normalization</strong> normalizes intermediate activations during training and uses learned/stored statistics during inference. <strong>Dropout</strong> randomly disables some activations during training to reduce dependence on particular paths. Dropout is disabled during normal prediction.</p>
+<p>The last <strong>sigmoid</strong> maps a single number to the interval 0 to 1. A score of 0.72 is displayed as 72%. This is a model score interpreted as estimated exit probability, not proof that the customer will exit and not a 72% accuracy or confidence guarantee. Class weighting and lack of calibration are additional reasons not to treat the score as a precisely validated real-world probability.</p>
+<p>The optimizer is <strong>Adam</strong>, with learning rate <strong>0.001</strong>. The loss is <strong>binary cross-entropy</strong>, which penalizes incorrect probability predictions. Backpropagation calculates how each parameter contributed to loss; the optimizer updates parameters to reduce it.</p>
+<h2 id="7-training-validation-and-test-data">7. Training, validation, and test data</h2>
+<p>The script first splits data into 80% development data (8,000 customers) and 20% test data (2,000). <code>stratify=y</code> approximately preserves churn/non-churn proportions. <code>random_state=42</code> makes this split repeatable.</p>
+<p>Keras then reserves 15% of the 8,000 development examples for validation: about 1,200 validation and 6,800 examples used for weight updates. Validation helps choose when to stop; the test set estimates performance after model selection.</p>
+<p>Defaults are <strong>45 maximum epochs</strong> and <strong>64 examples per batch</strong>. An epoch is one pass through the training examples. A batch is a smaller group used for one optimizer update. Early stopping watches <strong>validation AUC</strong>, stops after eight epochs without improvement, and restores weights from the best observed validation AUC.</p>
+<p>Only about one fifth of customers exited, so the classes are imbalanced. <code>compute_class_weight("balanced", ...)</code> assigns greater weight to errors on the less frequent churn class. This can improve attention to churn cases while increasing false alarms. It is not SMOTE, oversampling, or a guarantee of better accuracy.</p>
+<p>Two evaluation-design limitations remain in the original trainer:</p>
+<ol>
+<li>The high-value balance median is calculated before the train/test split, so that unsupervised statistic uses test feature information.</li>
+<li>The scaler/encoder is fitted to all 8,000 development rows before Keras takes its validation subset, so validation preprocessing statistics are not isolated from training.</li>
+</ol>
+<p>A stronger future implementation would split raw records into train/validation/test first, fit all learned preprocessing statistics only on the true training split, and reuse them unchanged everywhere. The deployed model follows the original training procedure; these evaluation limitations still apply.</p>
+<h2 id="8-how-to-read-the-actual-model-results">8. How to read the actual model results</h2>
+<p>See the verified-results section at the end for precise values reproduced from the saved model and 2,000 held-out rows. <code>models/metrics.pkl</code>, <code>models/test_predictions.csv</code>, and <code>models/classification_report.txt</code> contain the repository's saved evaluation.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Question it answers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accuracy</td>
+<td>What fraction of all test customers were classified correctly?</td>
+</tr>
+<tr>
+<td>Precision for Exited</td>
+<td>Of the customers predicted to exit, how many actually exited?</td>
+</tr>
+<tr>
+<td>Recall for Exited</td>
+<td>Of the customers who actually exited, how many did we catch?</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>Harmonic mean of precision and recall, balancing both.</td>
+</tr>
+<tr>
+<td>ROC AUC</td>
+<td>How well do scores rank churn cases above non-churn cases across possible thresholds?</td>
+</tr>
+</tbody>
+</table>
+<p>The confusion matrix has actual classes on rows and predicted classes on columns:</p>
+<pre><code class="language-text">                       Predicted stayed    Predicted exited
+Actually stayed        True negatives      False positives
+Actually exited        False negatives     True positives
+</code></pre>
+<p>A false positive could cause unnecessary outreach. A false negative could miss an at-risk customer. Which error matters more depends on a business cost analysis that is not implemented here.</p>
+<p>The repository originally reported 69.10% accuracy, 36.70% churn precision, 71.50% churn recall, and 0.7732 AUC. Those scores could not be reproduced from its bundled network, even after matching the scikit-learn and Keras versions recorded in its files. The original network produced 38.05% accuracy and 0.7422 AUC in this environment, so those old reported metrics are not claimed as verified. The original artifacts were backed up and the same architecture was trained locally using the repository's training script; use the verified local results at the end of this guide for your demonstration.</p>
+<p>An always-“stayed” baseline gets 79.65% test accuracy because most customers stayed, but catches zero churners. Always consider both the accuracy baseline and the ability to catch churn, including the cost of false positives. Do not state that deep learning beats logistic regression or tree models; no such trained-model comparison exists in the repo.</p>
+<p>Evaluation uses a <strong>0.50 binary threshold</strong>. The UI uses different display bands:</p>
+<ul>
+<li><strong>Stable:</strong> score below 0.35.</li>
+<li><strong>Watchlist:</strong> score at least 0.35 and below 0.65.</li>
+<li><strong>High Risk:</strong> score at least 0.65.</li>
+</ul>
+<p>These bands are coded choices, not thresholds optimized on a business objective. A Watchlist score can be on either side of the evaluation threshold. ROC AUC is not the same thing as accuracy.</p>
+<h2 id="9-trace-one-prediction-through-the-code">9. Trace one prediction through the code</h2>
+<ol>
+<li>Open <strong>Predict</strong> and fill ten inputs in <code>pages/2_Predict.py</code>.</li>
+<li>The form submit button builds a Python dictionary named <code>values</code>.</li>
+<li><code>score_customer()</code> in <code>utils/app_data.py</code> loads the saved network, preprocessor, and feature list. Streamlit's resource cache reuses these objects across subsequent predictions.</li>
+<li><code>make_prediction_frame()</code> creates a single-row DataFrame in the required raw input order.</li>
+<li><code>add_fintech_features()</code> produces the five derived columns. The local inference correction uses the reference dataset's balance median.</li>
+<li>The saved preprocessor transforms the row into 18 numeric inputs.</li>
+<li><code>model.predict()</code> runs the network and returns a score.</li>
+<li><code>risk_band()</code> chooses a display label and a fixed suggested action.</li>
+<li><code>explain_customer()</code> adds hand-written rules, such as mentioning inactivity or a single product.</li>
+<li>Streamlit renders the score, progress bar, label, and suggestions in your browser.</li>
+</ol>
+<p>The “explanation” text is <strong>rule-based</strong>, not SHAP, not an explanation of the neural network's exact reasoning, and not generated by a language model. The feature-signal chart shows absolute dataset correlations with churn; it is not model feature importance or evidence of causation.</p>
+<h2 id="10-understand-each-page">10. Understand each page</h2>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>What it actually shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Home (<code>app.py</code>)</td>
+<td>Historical customer count and churn rate, saved AUC/recall, and country/product/balance charts.</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>Historical exited count, saved AUC, average balance, and segmentation charts.</td>
+</tr>
+<tr>
+<td>Predict</td>
+<td>Interactive scoring of one manually entered profile.</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td>Filters the historical CSV by country and activity status, then recalculates charts and summaries.</td>
+</tr>
+<tr>
+<td>Model Performance</td>
+<td>Saved metrics, ROC computed from saved test predictions, training PNGs, correlations, and classification report.</td>
+</tr>
+<tr>
+<td>About</td>
+<td>Project description, workflow, technology list, and a local animation.</td>
+</tr>
+<tr>
+<td>Contact</td>
+<td>Demo form and portfolio placeholders; there is no email sending or persistent storage.</td>
+</tr>
+</tbody>
+</table>
+<p>The Contact submit handler only displays a success message. Do not describe it as a working contact-storage feature. Some branding/portfolio content still links to <code>harsh31415926</code> or uses placeholders; it is content inherited from the repo, so review attribution and personalize it appropriately before presenting.</p>
+<h2 id="11-file-map-what-to-read-and-in-what-order">11. File map: what to read and in what order</h2>
+<table>
+<thead>
+<tr>
+<th>File or folder</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data/bank_customer_churn.csv</code></td>
+<td>Historical labeled data.</td>
+</tr>
+<tr>
+<td><code>data/sample_customers.csv</code></td>
+<td>Four sample input profiles for manual demos.</td>
+</tr>
+<tr>
+<td><code>utils/preprocessing.py</code></td>
+<td>Loading, dropping identifiers, feature engineering, scaling/encoding, prediction row creation.</td>
+</tr>
+<tr>
+<td><code>train_model.py</code></td>
+<td>Defines ANN, trains, evaluates, writes model and charts.</td>
+</tr>
+<tr>
+<td><code>models/customer_exit_risk_model.h5</code></td>
+<td>Saved network architecture and learned weights.</td>
+</tr>
+<tr>
+<td><code>models/preprocessor.pkl</code></td>
+<td>Fitted scaler and encoder; must stay paired with the model.</td>
+</tr>
+<tr>
+<td><code>models/feature_columns.pkl</code></td>
+<td>Expected engineered input column names and order.</td>
+</tr>
+<tr>
+<td><code>models/metrics.pkl</code></td>
+<td>Saved accuracy, precision, recall, and AUC.</td>
+</tr>
+<tr>
+<td><code>models/test_predictions.csv</code></td>
+<td>Actual labels, predicted classes, and scores on the held-out set.</td>
+</tr>
+<tr>
+<td><code>models/classification_report.txt</code></td>
+<td>Precision, recall, F1, and support by class.</td>
+</tr>
+<tr>
+<td><code>utils/app_data.py</code></td>
+<td>Cached loaders, inference, risk bands, rule explanations, and chart functions.</td>
+</tr>
+<tr>
+<td><code>app.py</code> and <code>pages/</code></td>
+<td>Current application entry point and six pages.</td>
+</tr>
+<tr>
+<td><code>components/ui.py</code></td>
+<td>Sidebar, reusable cards, hero, animation, and footer.</td>
+</tr>
+<tr>
+<td><code>components/theme.py</code></td>
+<td>Page configuration and theme injection.</td>
+</tr>
+<tr>
+<td><code>assets/</code></td>
+<td>CSS, Lottie JSON, and saved evaluation images.</td>
+</tr>
+<tr>
+<td><code>streamlit_app/dashboard.py</code></td>
+<td>Older alternative dashboard implementation; it is not the entry point used by Run_Project.bat.</td>
+</tr>
+<tr>
+<td><code>notebooks/</code></td>
+<td>Placeholder README for future experiments; no completed notebook is included.</td>
+</tr>
+<tr>
+<td><code>requirements.txt</code></td>
+<td>Direct package requirements aligned with the installed versions.</td>
+</tr>
+<tr>
+<td><code>.streamlit/config.toml</code></td>
+<td>Added local address, port, privacy setting, and dark base theme.</td>
+</tr>
+<tr>
+<td><code>Run_Project.bat</code>, <code>Stop_Project.bat</code></td>
+<td>Added Windows controls for everyday use.</td>
+</tr>
+<tr>
+<td><code>verify_local.py</code>, <code>local_verification.json</code></td>
+<td>Added executable checks and their measured output.</td>
+</tr>
+</tbody>
+</table>
+<p>Suggested reading order: sample CSV -&gt; preprocessing -&gt; model training -&gt; app_data scoring -&gt; Predict page -&gt; app.py -&gt; remaining pages and styling.</p>
+<h2 id="12-what-was-corrected-locally-and-why">12. What was corrected locally and why?</h2>
+<p>In the original inference code, <code>add_fintech_features()</code> was called on a single customer. That customer's balance was also the median of the one-row input. Because a value is never strictly greater than itself, <code>IsHighValueInactive</code> was always 0 during single-customer scoring, even for a wealthy inactive customer. During training, the flag could be 1 because the reference median came from many customers.</p>
+<p>The local change adds an optional <code>balance_median</code> argument to feature engineering and passes the historical CSV's median from both prediction implementations. This matches the feature calculation used by the bundled model and original trainer. The regression check compares the transformed single customer against the same customer's training representation and score.</p>
+<p>The dataset and original training architecture/script are unchanged. On the original D: installation, the original model files and evaluation charts are preserved in <code>.cache/repository-originals/</code>. This private backup is excluded from Git. A fresh network and its matching metrics/charts were generated locally with <code>train_model.py</code> because the original model did not reproduce the original reported test scores. The package versions were also matched to the original artifact metadata: scikit-learn 1.9.0 and Keras 3.14.1. These choices and all resolved dependencies are recorded in the local lock file.</p>
+<p>Changing the reference dataset without retraining can still invalidate the feature relationship. A stronger future design would store the training-only median alongside the model artifacts. The repository update includes the tested setup, corrected inference, documentation, and the college presentation.</p>
+<h2 id="13-a-five-minute-college-demonstration">13. A five-minute college demonstration</h2>
+<ol>
+<li><strong>Problem (30 seconds):</strong> “We want to identify bank customers at risk of leaving, so a retention team can prioritize attention.”</li>
+<li><strong>Data (45 seconds):</strong> Show the dataset count and churn rate. Explain the ten input fields and binary target.</li>
+<li><strong>Prediction (60 seconds):</strong> Open Predict, enter a profile from sample_customers.csv, submit it, and explain the score and risk band. Then change activity or product count and submit again. Do not promise that every individual change moves the score in a particular direction.</li>
+<li><strong>Pipeline (60 seconds):</strong> Explain feature engineering, scaling, encoding, the 64/32/16 ANN, and sigmoid output.</li>
+<li><strong>Evaluation (60 seconds):</strong> Open Model Performance. Explain recall, false positives, and the majority-class baseline. Be candid about the model's current limitations.</li>
+<li><strong>Engineering (30 seconds):</strong> Show that the saved preprocessor and model are reused and that the app runs locally without external inference APIs.</li>
+<li><strong>Next work (15 seconds):</strong> Propose leakage-free validation, simpler baselines, threshold tuning, probability calibration, and model-specific explanation methods.</li>
+</ol>
+<h2 id="14-viva-questions-with-answers-you-can-defend">14. Viva questions with answers you can defend</h2>
+<p><strong>Why is this classification rather than regression?</strong> The target is a discrete exited/stayed label, although the network first produces a continuous probability-like score.</p>
+<p><strong>Why use sigmoid in the final layer?</strong> There is one binary outcome, and sigmoid maps the output into the interval 0 to 1.</p>
+<p><strong>Why use binary cross-entropy?</strong> It measures error between binary labels and predicted probabilities and supports gradient-based training.</p>
+<p><strong>Why scale numeric inputs?</strong> Their units and magnitudes differ sharply; standardization generally makes gradient-based optimization easier.</p>
+<p><strong>Why one-hot encode country and gender?</strong> The dense network needs numeric input, and one-hot vectors avoid inventing a numeric order among categories.</p>
+<p><strong>Why save the preprocessor?</strong> The model expects exactly the transformations used in training. Relearning a scaler or changing category order at inference would change the meaning of the inputs.</p>
+<p><strong>How do you reduce overfitting?</strong> The architecture uses dropout, batch normalization, and early stopping. Whether these are sufficient must be judged on properly isolated validation/test data.</p>
+<p><strong>Why is accuracy insufficient?</strong> An always-stayed classifier already achieves almost 80% here. Recall and precision reveal whether churners are caught and how many alerts are false.</p>
+<p><strong>Is ANN the best choice?</strong> That has not been established. Logistic regression, random forest, and gradient-boosted trees should be compared under the same clean splits and evaluation criteria.</p>
+<p><strong>Does a 70% score mean 70% accuracy?</strong> No. It is one customer's model output. Accuracy is a dataset-wide fraction of correct classifications, and probability calibration has not been established here.</p>
+<p><strong>Does the app learn from every form entry?</strong> No. Training happens only when running the training script. The form performs inference with saved weights.</p>
+<p><strong>Are the suggested actions personalized by another AI model?</strong> No. They are fixed text selected by thresholds and hand-written conditions.</p>
+<p><strong>Does it use a database or API?</strong> It uses CSV files and local artifacts. There is no application database, external prediction API, or live bank integration.</p>
+<p><strong>What is deployment here?</strong> Running a local Streamlit server that loads the saved model and serves the browser interface on this computer.</p>
+<p><strong>What needs improvement before real use?</strong> Proper data provenance, leakage-free evaluation, fair and representative data, calibration and threshold selection, baseline comparison, drift monitoring, robust validation, and measured business outcomes.</p>
+<h2 id="15-a-practical-study-sequence">15. A practical study sequence</h2>
+<ol>
+<li>Learn the meaning of every CSV column and calculate the churn rate yourself.</li>
+<li>Trace one sample customer's original and engineered features.</li>
+<li>Understand <code>fit_transform</code> versus <code>transform</code> and why preprocessing is saved.</li>
+<li>Draw the ANN and explain ReLU, sigmoid, loss, optimizer, batch, and epoch in your own words.</li>
+<li>Read the confusion matrix and explain the accuracy/recall tradeoff.</li>
+<li>Follow a form submission through the code to the displayed score.</li>
+<li>Practice the demonstration and viva questions, including honest limitations.</li>
+</ol>
+<p>You have understood the project when you can explain why the same customer must be transformed identically during training and prediction, and why a good-looking dashboard is separate from evidence that its model works well.</p>
+<h2 id="16-verified-local-results-23-october-2026">16. Verified local results — 23 October 2026</h2>
+<p>These results come from the locally trained network, saved to disk and then loaded again for verification. The original training script ran for 32 epochs before early stopping. The architecture and training defaults were not changed.</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Verified result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Historical dataset</td>
+<td>10,000 customers; 2,037 exited; 20.37% churn</td>
+</tr>
+<tr>
+<td>Missing values in supplied CSV</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Test set</td>
+<td>2,000 customers: 1,593 stayed and 407 exited</td>
+</tr>
+<tr>
+<td>Accuracy</td>
+<td>77.40%</td>
+</tr>
+<tr>
+<td>Churn precision</td>
+<td>46.61%</td>
+</tr>
+<tr>
+<td>Churn recall</td>
+<td>75.92%</td>
+</tr>
+<tr>
+<td>ROC AUC</td>
+<td>0.85898</td>
+</tr>
+<tr>
+<td>Always-stayed baseline accuracy</td>
+<td>79.65%, with 0% churn recall</td>
+</tr>
+<tr>
+<td>True negatives</td>
+<td>1,239 stayed customers correctly classified</td>
+</tr>
+<tr>
+<td>False positives</td>
+<td>354 stayed customers incorrectly flagged as exited</td>
+</tr>
+<tr>
+<td>False negatives</td>
+<td>98 exited customers missed</td>
+</tr>
+<tr>
+<td>True positives</td>
+<td>309 exited customers caught</td>
+</tr>
+<tr>
+<td>Reference balance median</td>
+<td>97,198.54 in the dataset's unspecified monetary units</td>
+</tr>
+<tr>
+<td>Reopened model vs saved test probabilities</td>
+<td>Maximum difference about 0.00000014, within numeric tolerance</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What you should say:</strong> “On this held-out split, the model catches about 76% of actual churn cases, but only about 47% of its churn alerts are correct. Its accuracy is below an always-stayed baseline, while that baseline catches no churn cases. AUC measures its ranking ability. We still need cleaner validation, threshold tuning, calibration, and comparisons with simpler classifiers.”</p>
+<h3 id="try-the-supplied-sample-profiles">Try the supplied sample profiles</h3>
+<p>Use the complete input values in <code>data/sample_customers.csv</code>. Row numbers below refer to data rows, excluding the header.</p>
+<table>
+<thead>
+<tr>
+<th>Sample</th>
+<th>Recognizable inputs</th>
+<th>Local score</th>
+<th>Display band</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>France; female; age 42; score 619; balance 0; 1 product; active</td>
+<td>65.87%</td>
+<td>High Risk</td>
+</tr>
+<tr>
+<td>2</td>
+<td>France; female; age 42; score 502; balance 159,660.80; 3 products; inactive</td>
+<td>98.72%</td>
+<td>High Risk</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Germany; male; age 36; score 850; balance 128,000; 2 products; active</td>
+<td>7.57%</td>
+<td>Stable</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Spain; female; age 51; score 580; balance 99,000; 1 product; inactive</td>
+<td>84.58%</td>
+<td>High Risk</td>
+</tr>
+</tbody>
+</table>
+<p>These scores belong to this saved model. Retraining may change them; they are not known ground-truth outcomes for the sample profiles.</p>
+<h3 id="verification-completed">Verification completed</h3>
+<ul>
+<li>Saved model predictions and metrics agree with the training script's saved test output.</li>
+<li>The inactive/high-balance single-customer feature matches its training representation.</li>
+<li>Home and all six named pages execute without app exceptions.</li>
+<li>The prediction form submits and renders an exit probability.</li>
+<li>Empty country filters on Analytics do not crash the page.</li>
+<li>A separate in-memory network performs a training step without changing the deployed model.</li>
+<li>The package manager reports no broken dependency requirements.</li>
+<li>Browser navigation and a real prediction submission work; the default profile displayed 29.4% (Stable). Screenshots are saved in <code>assets/local_dashboard.png</code> and <code>assets/local_prediction.png</code>.</li>
+<li>Stop_Project.bat's stop helper and Run_Project.bat were exercised successfully; the server was restarted and its local health endpoint returned <code>ok</code>.</li>
+</ul>
+<p>The machine-readable details are in <code>local_verification.json</code>. The training log is <code>local_training.log</code>, and the app-check log is <code>local_validation.log</code>.</p><footer>Prepared from the actual repository and local validation on 23 October 2026. Keep this guide with the project. Use Ctrl+P to print or save as PDF.</footer></main></body></html>

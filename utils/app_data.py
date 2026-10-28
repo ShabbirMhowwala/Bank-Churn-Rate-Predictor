@@ -73,7 +73,10 @@ def score_customer(values: dict) -> float:
         raise FileNotFoundError("Model artifacts are missing. Run python train_model.py first.")
 
     raw_frame = make_prediction_frame(values, feature_columns[:10])
-    prepared = preprocessor.transform(add_fintech_features(raw_frame))
+    # The bundled model and training script use the full reference dataset's median.
+    # A single-row median equals that customer's balance and would always clear the flag.
+    reference_median = float(load_dataset()["Balance"].median())
+    prepared = preprocessor.transform(add_fintech_features(raw_frame, balance_median=reference_median))
     return float(model.predict(prepared, verbose=0).ravel()[0])
 
 

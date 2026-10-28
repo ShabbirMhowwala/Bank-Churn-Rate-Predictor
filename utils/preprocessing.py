@@ -26,7 +26,7 @@ def load_bank_data(csv_path: str | Path) -> pd.DataFrame:
     return df
 
 
-def add_fintech_features(df: pd.DataFrame) -> pd.DataFrame:
+def add_fintech_features(df: pd.DataFrame, balance_median: float | None = None) -> pd.DataFrame:
     """Create simple finance-inspired features from the original bank columns."""
     engineered = df.copy()
 
@@ -38,8 +38,9 @@ def add_fintech_features(df: pd.DataFrame) -> pd.DataFrame:
     engineered["CreditScoreAgeRatio"] = engineered["CreditScore"] / engineered["Age"]
     engineered["BalancePerProduct"] = engineered["Balance"] / products
     engineered["TenureByAge"] = tenure / engineered["Age"]
+    reference_balance = engineered["Balance"].median() if balance_median is None else balance_median
     engineered["IsHighValueInactive"] = (
-        (engineered["Balance"] > engineered["Balance"].median())
+        (engineered["Balance"] > reference_balance)
         & (engineered["IsActiveMember"] == 0)
     ).astype(int)
 
